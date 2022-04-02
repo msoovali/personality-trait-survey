@@ -1,0 +1,77 @@
+{
+	"traits": [
+		{
+			"type": "Introvert",
+			"minScoreRequirement": 0
+		},
+		{
+			"type": "Extrovert",
+			"minScoreRequirement": 7
+		}
+	],
+	"questions": [
+		{
+			"description": "You’re really busy at work and a colleague is telling you their life story and personal woes. You:",
+			"options": [
+				{
+					"description": "Don’t dare to interrupt them",
+					"score": 0
+				},
+				{
+					"description": "Think it’s more important to give them some of your time; work can wait",
+					"score": 1
+				},
+				{
+					"description": "Listen, but with only with half an ear",
+					"score": 2
+				},
+				{
+					"description": "Interrupt and explain that you are really busy at the moment",
+					"score": 3
+				}
+			]
+		},
+		{
+			"description": "You’re having an animated discussion with a colleague regarding a project that you’re in charge of. You:",
+			"options": [
+				{
+					"description": "Don’t dare contradict them",
+					"score": 0
+				},
+				{
+					"description": "Think that they are obviously right",
+					"score": 1
+				},
+				{
+					"description": "Defend your own point of view, tooth and nail",
+					"score": 2
+				},
+				{
+					"description": "Continuously interrupt your colleague",
+					"score": 3
+				}
+			]
+		},
+		{
+			"description": "You are taking part in a guided tour of a museum. You:",
+			"options": [
+				{
+					"description": "Are a bit too far towards the back so don’t really hear what the guide is saying",
+					"score": 0
+				},
+				{
+					"description": "Follow the group without question",
+					"score": 1
+				},
+				{
+					"description": "Make sure that everyone is able to hear properly",
+					"score": 2
+				},
+				{
+					"description": "Are right up the front, adding your own comments in a loud voice",
+					"score": 3
+				}
+			]
+		}
+	]
+}

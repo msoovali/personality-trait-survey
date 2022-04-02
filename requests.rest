@@ -1,0 +1,125 @@
+@baseUrl = http://localhost:8080
+### health
+GET {{baseUrl}}/health
+Accept: application/json
+### questions v1
+GET {{baseUrl}}/v1/questions
+Accept: application/json
+###
+GET {{baseUrl}}/v1/question/880d405c-2c94-483e-8a34-01901387efb5
+Accept: application/json
+###
+PUT {{baseUrl}}/v1/question
+Accept: application/json
+Content-Type: application/json
+
+{
+    "id": "e3d975e6-2cd7-41dd-bcf3-bc38c0a7e9d5",
+    "description": "You’re really busy at work and a colleague is telling you their life story and personal woes. You:",
+    "options": [
+      {
+        "id": "7f6dfc09-dcd3-43b3-8992-70d0aca791f3",
+        "description": "Don’t dare to interrupt them",
+        "score": 0
+      },
+      {
+        "id": "72b38f36-37b4-4c95-a1b9-f0bbb12d7a82",
+        "description": "Think it’s more important to give them some of your time; work can wait",
+        "score": 1
+      },
+      {
+        "id": "aba3ea62-7ad5-4980-8f9d-c56fdea81129",
+        "description": "Listen, but with only with half an ear",
+        "score": 2
+      },
+      {
+        "id": "73743f46-b843-465a-be33-145989221da3",
+        "description": "Interrupt and explain that you are really busy at the moment",
+        "score": 3
+      }
+    ]
+}
+###
+POST {{baseUrl}}/v1/question
+Accept: application/json
+Content-Type: application/json
+
+{
+    "description": "Testing",
+    "options": [
+      {
+        "description": "123",
+        "score": 0
+      },
+      {
+        "description": "321",
+        "score": 1
+      },
+      {
+        "description": "3333",
+        "score": 2
+      },
+      {
+        "description": "444",
+        "score": -3
+      }
+    ]
+}
+###
+DELETE {{baseUrl}}/v1/question/f0cf6416-60d7-4ae0-97a2-24a7b2a08180
+Accept: application/json
+### Traits v1
+GET {{baseUrl}}/v1/traits
+Accept: application/json
+###
+GET {{baseUrl}}/v1/trait/880d405c-2c94-483e-8a34-01901387efb5
+Accept: application/json
+###
+POST {{baseUrl}}/v1/trait
+Accept: application/json
+Content-Type: application/json
+
+{
+  "type": "Hello",
+  "minScoreRequirement": 9
+}
+###
+PUT {{baseUrl}}/v1/trait
+Accept: application/json
+Content-Type: application/json
+
+{
+    "id": "2b054d98-19d6-4c24-8492-5479540b4864",
+    "type": "HelloHello2",
+    "minScoreRequirement": 10
+}
+###
+DELETE {{baseUrl}}/v1/trait/2b054d98-19d6-4c24-8492-5479540b4864
+Accept: application/json
+### Survey v1
+POST {{baseUrl}}/v1/survey/finish
+Accept: application/json
+Content-Type: application/json
+
+{
+  "answers": [
+    {
+      "questionId": "75f12b6a-b6c2-44d0-b1ca-c51885560d5e",
+      "optionId": "606e5e94-fc96-427a-b2c4-7535a596347d"
+    },
+    {
+      "questionId": "cdd8d374-6a88-4bad-9077-d3a27e422137",
+      "optionId": "48b7bb5f-cc1b-4391-af3a-4783717548f1"
+    },
+    {
+      "questionId": "9991af85-f464-4907-859e-d289e8b37421",
+      "optionId": "7cc7c27d-6146-486c-a708-87501195c11f"
+    }
+  ]
+}
+###
+GET {{baseUrl}}/v1/survey/result/5b356ab2-2d6b-481c-9cda-b471492d300d
+Accept: application/json
+###
+GET {{baseUrl}}/v1/survey/result/1061501a-24ed-4d7c-bc14-b2215e2d1ef2
+Accept: application/json
