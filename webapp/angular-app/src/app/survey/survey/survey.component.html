@@ -1,0 +1,28 @@
+<h4>Review You previous result:</h4>
+<div class="vstack gap-3">
+
+
+  <div class="hstack gap-3" [formGroup]="searchForm">
+    <input formControlName="surveyId" class="form-control" type="text" placeholder="Enter Your last survey id">
+    <button type="button" class="btn btn-secondary" (click)="reviewSurvey()">Review</button>
+  </div>
+
+  <h3>Answer the questions and find out about Your personality trait!</h3>
+</div>
+<form [formGroup]="form" class="row g-3">
+  <div formArrayName="answers" *ngFor="let question of questions; let i = index">
+    <div [formGroupName]="i" class="card">
+      <div class="card-header">
+        {{ i + 1 }}. {{ question.description }}
+      </div>
+      <ng-container *ngFor="let option of question.options">
+        <div class="col-sm-8">
+          <input type="radio" formControlName="optionId" value="{{ option.id }}"> {{ option.description }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="row g-3 justify-content-between">
+    <button type="submit" class="col-sm-2 btn btn-primary" (click)="saveForm()">Submit</button>
+  </div>
+</form>

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/msoovali/personality-trait-survey/internal/conf"
 	"github.com/msoovali/personality-trait-survey/internal/data"
@@ -56,6 +57,7 @@ func NewAPI() *application {
 		ReadTimeout:  time.Second * 30,
 		WriteTimeout: time.Second * 30,
 	})
+	app.router.Use(cors.New())
 	app.router.Use(logger.New())
 	app.registerRoutes()
 

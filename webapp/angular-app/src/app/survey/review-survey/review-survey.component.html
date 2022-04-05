@@ -1,0 +1,14 @@
+<div *ngIf="!loading && survey" class="card text-center">
+  <h1 class="card-header">You are more of an <b>{{ survey.trait.type }}</b> type!</h1>
+  <h3 class="card-body">
+    Your survey id: {{ survey.id }}
+  </h3>
+</div>
+
+<div *ngIf="!loading && !survey">
+  <div class="row justify-content-start">
+    <div class="col-6">
+      <button routerLink="/" class="btn btn-primary">Start a new survey!</button>
+    </div>
+  </div>
+</div>

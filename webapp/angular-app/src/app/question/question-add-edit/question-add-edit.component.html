@@ -1,0 +1,26 @@
+<h3>Question form</h3>
+
+<form [formGroup]="form" class="row g-3">
+  <div class=col-sm-7>
+    <label for="description" class="form-label">Question</label>
+    <input type="text" formControlName="description" class="form-control">
+  </div>
+  <h5>Options</h5>
+  <div formArrayName="options" *ngFor="let option of options.controls; let i = index">
+    <div [formGroupName]="i" class="row g-3">
+      <div class="col-sm-5">
+        <input type="text" formControlName="description" class="form-control" placeholder="option">
+      </div>
+      <div class="col-sm-2">
+        <input type="number" formControlName="score" class="form-control" placeholder="score">
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-danger" (click)="deleteOption(i)">Remove option</button>
+      </div>
+    </div>
+  </div>
+  <div class="row g-3 justify-content-between">
+    <button type="submit" class="col-sm-2 btn btn-primary" (click)="saveForm()">Submit</button>
+    <button class="col-sm-2 btn btn-success" (click)="addOption()">Add option</button>
+  </div>
+</form>

@@ -1,0 +1,32 @@
+<h3>Traits</h3>
+<button routerLink="/trait/add" type="button" class="btn btn-success mb-2">Add new</button>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <th>
+        Type
+      </th>
+      <th>
+        Minimum score requirement
+      </th>
+      <th>
+        Edit?
+      </th>
+      <th>
+        Delete?
+      </th>
+    </thead>
+    <tbody *ngFor="let t of traits | async">
+      <tr>
+        <td>
+          {{ t.type }}
+        </td>
+        <td>
+          {{ t.minScoreRequirement }}
+        </td>
+        <td><button routerLink="/trait/edit/{{t.id}}" type="button" class="btn btn-secondary">Edit</button></td>
+        <td><button (click)="deleteTrait(t.id)" type="button" class="btn btn-danger">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

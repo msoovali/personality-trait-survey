@@ -1,0 +1,15 @@
+<h3>Trait form</h3>
+
+<form [formGroup]="form" class="row g-3">
+  <div class=col-sm-7>
+    <label for="type" class="form-label">Type</label>
+    <input type="text" formControlName="type" class="form-control">
+  </div>
+  <div class=col-sm-2>
+    <label for="minScoreRequirement" class="form-label">Minimum score requirement</label>
+    <input type="number" formControlName="minScoreRequirement" class="form-control">
+  </div>
+  <div class="row g-3 justify-content-between">
+    <button type="submit" class="col-sm-2 btn btn-primary" (click)="saveForm()">Submit</button>
+  </div>
+</form>

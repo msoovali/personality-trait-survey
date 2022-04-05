@@ -1,0 +1,13 @@
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="navbar-nav container-fluid">
+      <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <div class=d-flex>
+        <a class="nav-item nav-link" routerLink="/questions" routerLinkActive="active">Questions</a>
+        <a class="nav-item nav-link" routerLink="/traits" routerLinkActive="active">Traits</a>
+      </div>
+    </div>
+</nav>
+<div class="container">
+  <app-alert></app-alert>
+  <router-outlet></router-outlet>
+</div>
