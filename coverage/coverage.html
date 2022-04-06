@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>conf: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/msoovali/personality-trait-survey/internal/conf/conf.go (100.0%)</option>
+				
+				<option value="file1">github.com/msoovali/personality-trait-survey/internal/repository/memory/question.go (72.7%)</option>
+				
+				<option value="file2">github.com/msoovali/personality-trait-survey/internal/repository/memory/repository.go (100.0%)</option>
+				
+				<option value="file3">github.com/msoovali/personality-trait-survey/internal/repository/memory/survey.go (100.0%)</option>
+				
+				<option value="file4">github.com/msoovali/personality-trait-survey/internal/repository/memory/trait.go (100.0%)</option>
+				
+				<option value="file5">github.com/msoovali/personality-trait-survey/internal/service/question.go (78.0%)</option>
+				
+				<option value="file6">github.com/msoovali/personality-trait-survey/internal/service/survey.go (0.0%)</option>
+				
+				<option value="file7">github.com/msoovali/personality-trait-survey/internal/service/trait.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package conf
+
+import "os"
+
+const (
+        addrEnvKey  = "ADDR"
+        defaultAddr = ":8080"
+)
+
+type ApplicationConfig struct {
+        Addr string
+}
+
+func ParseConfig() ApplicationConfig <span class="cov8" title="1">{
+        addr := getEnv(addrEnvKey, defaultAddr)
+
+        return ApplicationConfig{
+                Addr: addr,
+        }
+}</span>
+
+func getEnv(key, fallback string) string <span class="cov8" title="1">{
+        if value, ok := os.LookupEnv(key); ok </span><span class="cov8" title="1">{
+                return value
+        }</span>
+        <span class="cov8" title="1">return fallback</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package memory
+
+import (
+        "github.com/google/uuid"
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+)
+
+type questionRepository struct {
+        repository[domain.Question]
+}
+
+func NewQuestionRepository() *questionRepository <span class="cov8" title="1">{
+        return &amp;questionRepository{
+                repository: *newRepository[domain.Question](),
+        }
+}</span>
+
+func (r *questionRepository) Save(question domain.Question) domain.Question <span class="cov8" title="1">{
+        if question.Id == "" </span><span class="cov8" title="1">{
+                question.Id = uuid.New().String()
+        }</span>
+        <span class="cov8" title="1">options := make([]domain.Option, 0, len(question.Options))
+        for _, o := range question.Options </span><span class="cov0" title="0">{
+                if o.Id == "" </span><span class="cov0" title="0">{
+                        o.Id = uuid.New().String()
+                }</span>
+                <span class="cov0" title="0">options = append(options, o)</span>
+        }
+        <span class="cov8" title="1">question.Options = options
+        r.save(question)
+
+        return question</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package memory
+
+import (
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+        "github.com/msoovali/personality-trait-survey/internal/errors"
+)
+
+type repository[T domain.IEntity] struct {
+        store map[string]T
+}
+
+func newRepository[T domain.IEntity]() *repository[T] <span class="cov8" title="1">{
+        return &amp;repository[T]{
+                store: make(map[string]T),
+        }
+}</span>
+
+func (r *repository[T]) Find(id string) (T, error) <span class="cov8" title="1">{
+        entity, exists := r.store[id]
+        if exists </span><span class="cov8" title="1">{
+                return entity, nil
+        }</span>
+
+        <span class="cov8" title="1">return entity, errors.NoRecordFound</span>
+}
+
+func (r *repository[T]) FindAll() []T <span class="cov8" title="1">{
+        entities := make([]T, 0, len(r.store))
+        for _, q := range r.store </span><span class="cov8" title="1">{
+                entities = append(entities, q)
+        }</span>
+
+        <span class="cov8" title="1">return entities</span>
+}
+
+func (r *repository[T]) save(entity T) <span class="cov8" title="1">{
+        r.store[entity.GetId()] = entity
+}</span>
+
+func (r *repository[T]) Delete(id string) <span class="cov8" title="1">{
+        delete(r.store, id)
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package memory
+
+import (
+        "github.com/google/uuid"
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+)
+
+type surveyRepository struct {
+        repository[domain.Survey]
+}
+
+func NewSurveyRepository() *surveyRepository <span class="cov8" title="1">{
+        return &amp;surveyRepository{
+                repository: *newRepository[domain.Survey](),
+        }
+}</span>
+
+func (r *surveyRepository) Save(survey domain.Survey) domain.Survey <span class="cov8" title="1">{
+        if survey.Id == "" </span><span class="cov8" title="1">{
+                survey.Id = uuid.New().String()
+        }</span>
+        <span class="cov8" title="1">r.save(survey)
+
+        return survey</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package memory
+
+import (
+        "github.com/google/uuid"
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+)
+
+type traitRepository struct {
+        repository[domain.Trait]
+}
+
+func NewTraitRepository() *traitRepository <span class="cov8" title="1">{
+        return &amp;traitRepository{
+                repository: *newRepository[domain.Trait](),
+        }
+}</span>
+
+func (r *traitRepository) Save(trait domain.Trait) domain.Trait <span class="cov8" title="1">{
+        if trait.Id == "" </span><span class="cov8" title="1">{
+                trait.Id = uuid.New().String()
+        }</span>
+        <span class="cov8" title="1">r.save(trait)
+
+        return trait</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package service
+
+import (
+        "errors"
+
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+        _errors "github.com/msoovali/personality-trait-survey/internal/errors"
+        "github.com/msoovali/personality-trait-survey/internal/repository"
+)
+
+var (
+        QuestionIdEmptyError           = errors.New("QUESTION_ID_EMPTY")
+        QuestionDescriptionEmptyError  = errors.New("QUESTION_DESCRIPTION_EMPTY")
+        AtleastTwoOptionsRequiredError = errors.New("ATLEAST_TWO_OPTIONS_REQUIRED")
+        OptionDescriptionEmptyError    = errors.New("OPTION_DESCRIPTION_EMPTY")
+        OptionScoreNegativeError       = errors.New("OPTION_SCORE_MUST_BE_POSITIVE")
+        QuestionNotFoundError          = errors.New("QUESTION_NOT_FOUND")
+)
+
+type questionService struct {
+        repository repository.QuestionRepository
+}
+
+func NewQuestionService(repository repository.QuestionRepository) *questionService <span class="cov8" title="1">{
+        return &amp;questionService{
+                repository: repository,
+        }
+}</span>
+
+func (s *questionService) GetAll() []domain.Question <span class="cov8" title="1">{
+        return s.repository.FindAll()
+}</span>
+
+func (s *questionService) Add(question domain.Question) (domain.Question, error) <span class="cov8" title="1">{
+        if err := questionValidator(question); err != nil </span><span class="cov8" title="1">{
+                return question, err
+        }</span>
+        <span class="cov8" title="1">question.Id = ""
+        for _, o := range question.Options </span><span class="cov0" title="0">{
+                o.Id = ""
+        }</span>
+        <span class="cov8" title="1">question = s.repository.Save(question)
+
+        return question, nil</span>
+}
+
+func (s *questionService) Edit(question domain.Question) (domain.Question, error) <span class="cov8" title="1">{
+        if err := questionEditValidator(question); err != nil </span><span class="cov8" title="1">{
+                return question, err
+        }</span>
+        <span class="cov8" title="1">existingQuestion, err := s.Get(question.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return question, err
+        }</span>
+        <span class="cov8" title="1">for _, o := range question.Options </span><span class="cov0" title="0">{
+                optionExists := false
+                for _, existingOption := range existingQuestion.Options </span><span class="cov0" title="0">{
+                        if o.Id == existingOption.Id </span><span class="cov0" title="0">{
+                                optionExists = true
+                        }</span>
+                }
+                <span class="cov0" title="0">if !optionExists </span><span class="cov0" title="0">{
+                        o.Id = ""
+                }</span>
+        }
+        <span class="cov8" title="1">question = s.repository.Save(question)
+
+        return question, nil</span>
+}
+
+func (s *questionService) Get(id string) (domain.Question, error) <span class="cov8" title="1">{
+        q, err := s.repository.Find(id)
+        if errors.Is(err, _errors.NoRecordFound) </span><span class="cov8" title="1">{
+                return q, QuestionNotFoundError
+        }</span>
+
+        <span class="cov8" title="1">return q, err</span>
+}
+
+func (s *questionService) Delete(id string) <span class="cov8" title="1">{
+        s.repository.Delete(id)
+}</span>
+
+var questionEditValidator = validateQuestionEdit
+
+func validateQuestionEdit(question domain.Question) error <span class="cov8" title="1">{
+        if question.Id == "" </span><span class="cov8" title="1">{
+                return QuestionIdEmptyError
+        }</span>
+
+        <span class="cov8" title="1">return questionValidator(question)</span>
+}
+
+var questionValidator = validateQuestion
+
+func validateQuestion(question domain.Question) error <span class="cov8" title="1">{
+        if question.Description == "" </span><span class="cov8" title="1">{
+                return QuestionDescriptionEmptyError
+        }</span>
+        <span class="cov8" title="1">if len(question.Options) &lt; 2 </span><span class="cov8" title="1">{
+                return AtleastTwoOptionsRequiredError
+        }</span>
+        <span class="cov8" title="1">for _, o := range question.Options </span><span class="cov8" title="1">{
+                if o.Description == "" </span><span class="cov8" title="1">{
+                        return OptionDescriptionEmptyError
+                }</span>
+                <span class="cov8" title="1">if o.Score &lt; 0 </span><span class="cov0" title="0">{
+                        return OptionScoreNegativeError
+                }</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package service
+
+import (
+        "errors"
+
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+        _errors "github.com/msoovali/personality-trait-survey/internal/errors"
+        "github.com/msoovali/personality-trait-survey/internal/repository"
+)
+
+var (
+        SurveyQuestionIdEmpty    = errors.New("SURVEY_QUESTION_ID_EMPTY")
+        SurveyOptionIdEmpty      = errors.New("SURVEY_OPTION_ID_EMPTY")
+        SurveyQuestionIdNotFound = errors.New("SURVEY_QUESTION_ID_NOT_FOUND")
+        SurveyOptionIdNotFound   = errors.New("SURVEY_OPTION_ID_NOT_FOUND")
+        SurveyMissingAnswers     = errors.New("SURVEY_MISSING_ANSWERS")
+        SurveyNotFound           = errors.New("SURVEY_NOT_FOUND")
+        SurveyResultExpired      = errors.New("SURVEY_RESULT_EXPIRED")
+)
+
+type surveyService struct {
+        repository      repository.SurveyRepository
+        questionService QuestionService
+        traitService    TraitService
+}
+
+func NewSurveyService(repository repository.SurveyRepository, questionService QuestionService, traitService TraitService) *surveyService <span class="cov0" title="0">{
+        return &amp;surveyService{
+                repository:      repository,
+                questionService: questionService,
+                traitService:    traitService,
+        }
+}</span>
+
+func (s *surveyService) GetResults(id string) (domain.SurveyResponse, error) <span class="cov0" title="0">{
+        survey, err := s.repository.Find(id)
+        if errors.Is(err, _errors.NoRecordFound) </span><span class="cov0" title="0">{
+                return domain.SurveyResponse{}, SurveyNotFound
+        }</span>
+        <span class="cov0" title="0">trait, err := s.traitService.Get(survey.TraitId)
+        if errors.Is(err, _errors.NoRecordFound) </span><span class="cov0" title="0">{
+                return domain.SurveyResponse{}, SurveyResultExpired
+        }</span>
+
+        <span class="cov0" title="0">return domain.SurveyResponse{
+                Id:    survey.Id,
+                Score: survey.Score,
+                Trait: trait,
+        }, nil</span>
+}
+
+func (s *surveyService) Finish(survey domain.Survey) (domain.SurveyResponse, error) <span class="cov0" title="0">{
+        // calculate score
+        questions := s.questionService.GetAll()
+        score := 0
+        for _, q := range questions </span><span class="cov0" title="0">{
+                surveyIncludesAnswer := false
+                for _, a := range survey.Answers </span><span class="cov0" title="0">{
+                        if a.QuestionId == q.Id </span><span class="cov0" title="0">{
+                                surveyIncludesAnswer = true
+                                option, err := findOptionById(a.OptionId, q.Options)
+                                if err != nil </span><span class="cov0" title="0">{
+                                        return domain.SurveyResponse{}, err
+                                }</span>
+                                <span class="cov0" title="0">score += option.Score
+                                break</span>
+                        }
+                }
+                <span class="cov0" title="0">if !surveyIncludesAnswer </span><span class="cov0" title="0">{
+                        return domain.SurveyResponse{}, SurveyMissingAnswers
+                }</span>
+        }
+        <span class="cov0" title="0">survey.Score = score
+        // determine trait
+        traits := s.traitService.GetAll()
+        var surveyTrait domain.Trait
+        for _, t := range traits </span><span class="cov0" title="0">{
+                if surveyTrait.MinScoreRequirement &lt;= t.MinScoreRequirement &amp;&amp; score &gt;= t.MinScoreRequirement </span><span class="cov0" title="0">{
+                        surveyTrait = t
+                }</span>
+        }
+        <span class="cov0" title="0">survey.TraitId = surveyTrait.Id
+        // save and return survey
+        survey = s.repository.Save(survey)
+        return domain.SurveyResponse{
+                Id:    survey.Id,
+                Score: survey.Score,
+                Trait: surveyTrait,
+        }, nil</span>
+}
+
+func findOptionById(id string, options []domain.Option) (domain.Option, error) <span class="cov0" title="0">{
+        for _, o := range options </span><span class="cov0" title="0">{
+                if o.Id == id </span><span class="cov0" title="0">{
+                        return o, nil
+                }</span>
+        }
+        <span class="cov0" title="0">return domain.Option{}, SurveyOptionIdNotFound</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package service
+
+import (
+        "errors"
+
+        "github.com/msoovali/personality-trait-survey/internal/domain"
+        _errors "github.com/msoovali/personality-trait-survey/internal/errors"
+        "github.com/msoovali/personality-trait-survey/internal/repository"
+)
+
+var (
+        TraitIdEmptyError          = errors.New("TRAIT_ID_EMPTY")
+        TraitTypeEmptyError        = errors.New("TRAIT_TYPE_EMPTY")
+        TraitNotFoundError         = errors.New("TRAIT_NOT_FOUND")
+        TraitMinScoreNegativeError = errors.New("TRAIT_MIN_SCORE_MUST_BE_POSITIVE")
+)
+
+type traitService struct {
+        repository repository.TraitRepository
+}
+
+func NewTraitService(repository repository.TraitRepository) *traitService <span class="cov0" title="0">{
+        return &amp;traitService{
+                repository: repository,
+        }
+}</span>
+
+func (s *traitService) GetAll() []domain.Trait <span class="cov0" title="0">{
+        return s.repository.FindAll()
+}</span>
+
+func (s *traitService) Add(trait domain.Trait) (domain.Trait, error) <span class="cov0" title="0">{
+        if err := traitValidator(trait); err != nil </span><span class="cov0" title="0">{
+                return trait, err
+        }</span>
+        <span class="cov0" title="0">trait.Id = ""
+        trait = s.repository.Save(trait)
+
+        return trait, nil</span>
+}
+
+func (s *traitService) Edit(trait domain.Trait) (domain.Trait, error) <span class="cov0" title="0">{
+        if err := traitEditValidator(trait); err != nil </span><span class="cov0" title="0">{
+                return trait, err
+        }</span>
+        <span class="cov0" title="0">_, err := s.Get(trait.Id)
+        if err != nil </span><span class="cov0" title="0">{
+                return trait, err
+        }</span>
+        <span class="cov0" title="0">trait = s.repository.Save(trait)
+
+        return trait, nil</span>
+}
+
+func (s *traitService) Get(id string) (domain.Trait, error) <span class="cov0" title="0">{
+        q, err := s.repository.Find(id)
+        if errors.Is(err, _errors.NoRecordFound) </span><span class="cov0" title="0">{
+                return q, TraitNotFoundError
+        }</span>
+
+        <span class="cov0" title="0">return q, err</span>
+}
+
+func (s *traitService) Delete(id string) <span class="cov0" title="0">{
+        s.repository.Delete(id)
+}</span>
+
+var traitEditValidator = validateTraitEdit
+
+func validateTraitEdit(trait domain.Trait) error <span class="cov0" title="0">{
+        if trait.Id == "" </span><span class="cov0" title="0">{
+                return TraitIdEmptyError
+        }</span>
+
+        <span class="cov0" title="0">return traitValidator(trait)</span>
+}
+
+var traitValidator = validateTrait
+
+func validateTrait(trait domain.Trait) error <span class="cov0" title="0">{
+        if trait.Type == "" </span><span class="cov0" title="0">{
+                return TraitTypeEmptyError
+        }</span>
+        <span class="cov0" title="0">if trait.MinScoreRequirement &lt; 0 </span><span class="cov0" title="0">{
+                return TraitMinScoreNegativeError
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
