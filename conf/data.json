@@ -1,11 +1,11 @@
 {
 	"traits": [
 		{
-			"type": "Introvert",
+			"type": "introvert",
 			"minScoreRequirement": 0
 		},
 		{
-			"type": "Extrovert",
+			"type": "extrovert",
 			"minScoreRequirement": 7
 		}
 	],
@@ -22,7 +22,7 @@
 					"score": 1
 				},
 				{
-					"description": "Listen, but with only with half an ear",
+					"description": "Listen, but only with half an ear",
 					"score": 2
 				},
 				{
